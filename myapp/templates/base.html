@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+
+<!-- Meta -->
+<meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+
+<!-- Title-->
+<title>{% block title %}{% endblock %}</title>
+
+<!-- Bootstrap -->
+{% load django_bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+<!-- Style -->
+{% block style %}{% endblock %}
+
+</head>
+
+
+<body class='d-flex flex-column min-vh-100'>
+
+<!-- Header -->
+<header>{% block header %}{% include 'header.html' %}{% endblock %}</header>
+
+<!-- Main -->
+<main>{% block main %}{% endblock %}</main>
+
+<!-- Footer -->
+{% block footer %}{% include 'footer.html' %}{% endblock %}
+
+</body>
+</html>

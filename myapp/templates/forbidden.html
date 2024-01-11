@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}Forbidden{% endblock %}
+
+{% block header %}{% endblock %}
+
+{% block main %}
+    <div class='bg-dark text-secondary px-4 py-5 text-center min-vh-100'>
+        <div class='py-5'>
+            <h1 class='display-5 fw-bold text-white'>Oops!</h1>
+            <div class='col-lg-6 mx-auto'>
+                <p class='fs-5 my-4'>
+                    Looks like you do not have the required permissions
+                    to perform the requested operation.</p>
+                <div class='d-grid gap-2 d-sm-flex justify-content-sm-center'>
+                    <button type='button'
+                            class='btn btn-outline-info btn-lg px-4 me-sm-3 fw-bold'
+                            onclick='history.back()'>Go Back
+                    </button>
+                    <button type='button'
+                            class='btn btn-outline-light btn-lg px-4'
+                            onclick="window.location.href='{% url 'home' %}'">Return Home
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block footer %}{% endblock %}

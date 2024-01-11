@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block title %}Team{% endblock %}
+
+{% block main %}
+    <div class='container mt-5 mb-5'>
+        <!-- Description -->
+        <div class='row'>
+            <h2 class='mb-3'>Your Team</h2>
+            <p>View all registered users.</p>
+            <p>Click on a user to view or edit its details.</p>
+        </div>
+        <!-- Navigation -->
+        <div class='row mb-4'>
+            <!-- Search Bar -->
+            <div class='col-5'>
+                <form class='input-group' method='GET'>
+                    <input class='form-control shadow-none'
+                           type='text'
+                           id='searchBar'
+                           name='search'
+                           value='{{ request.GET.search }}'
+                           placeholder='Search for a user ... '
+                           autofocus
+                           onfocus='this.setSelectionRange(this.value.length,this.value.length);'>
+                    <label for='searchBar'></label>
+                    <button class='btn btn-success'
+                            type='submit'>Go
+                    </button>
+                    <a class='btn btn-secondary text-white text-decoration-none'
+                       href='{% url 'user-list' project.id %}'>Clear</a>
+                </form>
+            </div>
+            <!-- Spacing -->
+            <div class='col-3'></div>
+            <!-- Add Existing User Button -->
+            <div class='col-2'>
+                <a class='btn btn-primary'
+                   href={% url 'member-create' project.id %}>Add Existing User</a>
+            </div>
+            <!-- Create New User Button -->
+            <div class='col-2'>
+                <a class='btn btn-primary'
+                   href={% url 'user-create' project.id %}>Add New User</a>
+            </div>
+        </div>
+        <!-- Table View -->
+        <table class='table table-hover mt-3'>
+            <thead>
+            <tr>
+                <th>Username</th>
+                <th>Display Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Log Time</th>
+                <th>Last Login</th>
+                <th>Admin</th>
+            </tr>
+            </thead>
+            <tbody class='table-group-divider'>
+            <!-- Rows -->
+            {% for user in users %}
+                <tr style='cursor: pointer;'
+                    onclick="window.location.href='{% url 'user-update' project.id user.id %}'">
+                    <td>{{ user.get_username }}</td>
+                    <td>{{ user.get_full_name }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.get_role_display }}</td>
+                    <td>{{ user.get_log_time_display }}</td>
+                    <td>{{ user.get_last_login_display }}</td>
+                    {% if user.is_admin or user.is_superuser %}
+                        <td>✅</td>
+                    {% else %}
+                        <td></td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

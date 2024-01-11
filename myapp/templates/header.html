@@ -1,0 +1,101 @@
+<!-- Guest -->
+{% if user.is_guest %}
+    <div class='py-2 bg-light border-bottom d-flex justify-content-center align-items-center'>
+        <p class='my-0 blockquote-footer'>You are currently browsing as a Guest with read-only access.
+            <a class='text-underline text-black'
+               onmouseover="this.style.cursor='pointer'"
+               onmouseout="this.style.cursor='default'"
+               onclick="document.getElementById('logoutForm').submit()">Exit</a>
+        </p>
+    </div>
+{% endif %}
+
+<!-- Navbar -->
+<nav class='navbar navbar-expand-lg navbar-dark bg-primary'>
+    <div class='container-fluid ms-2 me-2'>
+        <!-- Brand -->
+        <a class='navbar-brand'
+           href='{% url 'home' %}'>{{ settings.SITE_NAME }}</a>
+        <!-- Toggle Button (on small screens) -->
+        <button class='navbar-toggler'
+                type='button'
+                data-bs-toggle='collapse'
+                data-bs-target='#navbarSupportedContent'
+                aria-controls='navbarSupportedContent'
+                aria-expanded='false'
+                aria-label='Toggle navigation'>
+            <span class='navbar-toggler-icon'></span>
+        </button>
+        <!-- Collapsible Navbar -->
+        <div class='collapse navbar-collapse'
+             id='navbarSupportedContent'>
+            <!-- Right Links -->
+            <ul class='navbar-nav me-auto mb-2 mb-lg-0'>
+                {% if user.last_visited_project %}
+                    <!-- Select Project -->
+                    <form class='me-2'
+                          id='projectForm'
+                          method='get'>
+                        <select class='form-select'
+                                name='project-id'
+                                onchange="document.getElementById('projectForm').submit()"
+                                aria-label='project-dropdown'
+                                {% if 'create' in request.path or 'update' in request.path %}
+                                disabled {% endif %}>
+                            {% for project in user.projects.all %}
+                                <option value='{{ project.id }}'
+                                        {% if user.last_visited_project == project %}selected{% endif %}>
+                                    {{ project.name }}
+                                </option>
+                            {% endfor %}
+                            <option style='font-size: 1px; background-color: #000000;'
+                                    disabled>
+                                &nbsp;
+                            </option>
+                            <option value='-1'>All Projects</option>
+                            <input type='submit' style='display: none'>
+                        </select>
+                    </form>
+                    <li class='nav-item'>
+                        <a class='nav-link text-white'
+                           title='View your dashboard!'
+                           href='{% url 'project-detail' user.last_visited_project.id %}'>Dashboard</a>
+                    </li>
+                    <li class='nav-item'>
+                        <a class='nav-link text-white'
+                           title='View your team!'
+                           href='{% url 'user-list' user.last_visited_project.id %}'>Team</a>
+                    </li>
+                    <li class='nav-item'>
+                        <a class='nav-link text-white'
+                           title='View your sprints!'
+                           href='{% url 'sprint-list' user.last_visited_project.id %}'>Sprints</a>
+                    </li>
+                    <li class='nav-item'>
+                        <a class='nav-link text-white'
+                           title='View your tasks!'
+                           href='{% url 'task-list' user.last_visited_project.id %}'>Tasks</a>
+                    </li>
+                {% endif %}
+            </ul>
+            <!-- Left Links -->
+            <div class='d-flex'>
+                {% if user.is_authenticated %}
+                    <!-- Greeting -->
+                    <span class='navbar-text text-white me-3'>Hi {{ user.first_name }}</span>
+                    <!-- Logout -->
+                    <form id='logoutForm' method='post' action='{% url 'logout' %}'>
+                        {% csrf_token %}
+                        <button class='btn btn-outline-light'
+                                type='submit'>Logout
+                        </button>
+                    </form>
+                {% else %}
+                    <!-- Login -->
+                    <a class='btn btn-outline-light'
+                       href='{% url 'login' %}'>Login</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</nav>

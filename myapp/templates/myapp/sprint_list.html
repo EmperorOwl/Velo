@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+
+{% block title %}Sprints{% endblock %}
+
+{% block style %}
+    <style>
+        .active {
+            background-color: rgba(47, 140, 255, 1);
+            color: white;
+        }
+
+        .active a {
+            color: white;
+        }
+
+        .notstarted a {
+            color: black
+        }
+
+        .completed {
+            background-color: rgba(245, 245, 245, 0.4);
+            color: rgba(0, 0, 0, 0.5);
+        }
+
+        .completed a {
+            color: rgba(0, 0, 0, 0.5);
+        }
+
+        .card:hover {
+            cursor: pointer;
+            border-width: thick;
+        }
+    </style>
+{% endblock %}
+
+{% block main %}
+    <div class='container mt-5 mb-5'>
+        <!-- Description -->
+        <div class='row'>
+            <h2 class='mb-3'>{{ project.name }}'s Sprints</h2>
+            <p>Click on a sprint to view or update its details.</p>
+        </div>
+        <!-- Navigation -->
+        <div class='row mb-4'>
+            <!-- Search Bar -->
+            <div class='col-5'>
+                <form class='input-group' method='GET'>
+                    <input class='form-control shadow-none'
+                           type='text'
+                           id='searchBar'
+                           name='search'
+                           value='{{ request.GET.search }}'
+                           placeholder='Search for a sprint ... '
+                           autofocus
+                           onfocus='this.setSelectionRange(this.value.length,this.value.length);'>
+                    <label for='searchBar'></label>
+                    <button class='btn btn-success'
+                            type='submit'>Go
+                    </button>
+                    <a class='btn btn-secondary text-white text-decoration-none'
+                       href='{% url 'sprint-list' project.id %}'>Clear</a>
+                </form>
+            </div>
+            <!-- Spacing -->
+            <div class='col-5'></div>
+            <!-- Create Button -->
+            <div class='col-2'>
+                <a class='btn btn-primary'
+                   href={% url 'sprint-create' project.id %}>Create Sprint</a>
+            </div>
+        </div>
+        <!-- Cards -->
+        <div class='row'>
+            {% for sprint in sprints %}
+                <div class='col-sm-4'>
+                    <div class='card mt-3 {{ sprint.get_status_display|cut:' '|lower }}'
+                         onclick="window.location.href='{% url 'sprint-update' project.id sprint.id %}'">
+                        <div class='card-body'>
+                            <h5 class='card-title mb-3'>{{ sprint.name }}</h5>
+                            <p class='card-text mb-2'>{{ sprint.get_status_display }}</p>
+                            <p class='card-text mb-2'>
+                                {{ sprint.start_date|date:'d/m/Y' }} - {{ sprint.end_date|date:'d/m/Y' }}
+                            </p>
+                            <p class='card-text mb-2'>
+                                {{ sprint.point_progress.completed }}/{{ sprint.point_progress.total }}
+                                story points achieved
+                            </p>
+                            <p class='card-text mb-2'>
+                                {{ sprint.task_progress.completed }}/{{ sprint.task_progress.total }}
+                                tasks completed
+                            </p>
+                            <p class='card-text'>{{ sprint.get_log_time_display }} logged</p>
+                            <a class="card-link"
+                               href="{% url 'home' %}">Scrum Board</a>
+                            <a class="card-link"
+                               href="{% url 'home' %}">Burndown Chart</a>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <p></p>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

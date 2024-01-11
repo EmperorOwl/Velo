@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+
+{% block title %}New Member{% endblock %}
+
+{% block main %}
+    <div class='container p-5 my-5 border'>
+        <form method='post'>
+            <h2 class='mb-3'>New Member</h2>
+            <p>Select an existing user to add to your project.</p>
+            {% csrf_token %}
+            {% bootstrap_form form %}
+            <!-- Submit -->
+            <input class='btn btn-primary'
+                   type='submit'
+                   value='Add'>
+            <!-- Cancel -->
+            <a class='btn btn-secondary text-white text-decoration-none'
+               href='{% url 'user-list' project.id %}'>Cancel</a>
+        </form>
+    </div>
+{% endblock %}
