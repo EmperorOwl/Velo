@@ -3,8 +3,8 @@ from django.db.models.signals import post_migrate
 
 
 def create_default_objects(sender, **kwargs):
-    from .models import Tag, User, Project, Sprint, Task
-    from .choices import UserRole
+    from .models import Tag, User, Project, Sprint, Task, Member
+    from .choices import MemberRole
     # Create default tags.
     tags = [
         'Frontend',
@@ -35,16 +35,30 @@ def create_default_objects(sender, **kwargs):
             email='guest@example.com',
             password='guest',
             first_name='Guest',
-            role=UserRole.GUEST
         )
     else:
         guest = User.objects.get(username='guest')
     # Create default project, sprint and task.
-    project, _ = Project.objects.get_or_create(name='Demo Project')
-    project.team.add(admin, guest)
-    project.save()
-    sprint, _ = Sprint.objects.get_or_create(project=project, name='Test Sprint')
-    task, _ = Task.objects.get_or_create(sprint=sprint, name='Test Task')
+    project, _ = Project.objects.get_or_create(
+        name='Demo Project'
+    )
+    Member.objects.get_or_create(
+        project=project,
+        user=admin,
+    )
+    Member.objects.get_or_create(
+        project=project,
+        user=guest,
+        role=MemberRole.GUEST
+    )
+    sprint, _ = Sprint.objects.get_or_create(
+        project=project,
+        name='Test Sprint'
+    )
+    task, _ = Task.objects.get_or_create(
+        sprint=sprint,
+        name='Test Task'
+    )
 
 
 class MyappConfig(AppConfig):

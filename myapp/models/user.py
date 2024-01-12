@@ -2,25 +2,17 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
 
-from ..choices import UserRole, TaskStatus
+from ..choices import TaskStatus
 from ..utils import Progress
 
 
 class User(AbstractUser):
     """ Represents a user. """
-    role = models.IntegerField(
-        choices=UserRole.choices,
-        default=UserRole.MEMBER
-    )
     last_visited_project = models.ForeignKey(
         'Project',
         on_delete=models.SET_NULL,
         null=True
     )
-
-    def is_guest(self) -> bool:
-        """ Returns True if this user is a guest. """
-        return self.role == UserRole.GUEST
 
     def set_last_visited_project(self, project):
         """ Setter """

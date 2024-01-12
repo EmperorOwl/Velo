@@ -26,11 +26,10 @@ urls = [
     ('projects/<int:p_id>/tasks/<int:t_id>/update', TaskUpdate.as_view(), 'task-update'),
     ('projects/<int:p_id>/tasks/<int:t_id>/delete', TaskDelete.as_view(), 'task-delete'),
     # User
-    ('projects/<int:p_id>/users', UserList.as_view(), 'user-list'),
     ('projects/<int:p_id>/users/create', UserCreate.as_view(), 'user-create'),
     ('projects/<int:p_id>/users/<int:u_id>/update', UserUpdate.as_view(), 'user-update'),
-    ('projects/<int:p_id>/users/<int:u_id>/delete', UserDelete.as_view(), 'user-delete'),
     # Member
+    ('projects/<int:p_id>/members', MemberList.as_view(), 'member-list'),
     ('projects/<int:p_id>/members/create', MemberCreate.as_view(), 'member-create'),
     ('projects/<int:p_id>/members/<int:m_id>/delete', MemberDelete.as_view(), 'member-delete'),
 ]

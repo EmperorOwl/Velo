@@ -11,12 +11,12 @@ from ..utils import process_form_for_display
 # FORMS -----------------------------------------------------------------------
 
 class UserCreationForm(BaseUserCreationForm):
-    """ Custom one """
+    """ Custom form """
 
     class Meta:
         model = User
         fields = ['username', 'password1', 'password2',
-                  'first_name', 'last_name', 'email', 'role']
+                  'first_name', 'last_name', 'email']
 
 
 # MIXINS ----------------------------------------------------------------------
@@ -34,7 +34,7 @@ class UserMixin(LoginRequiredMixin, ContextMixin):
 
     def get_success_url(self):
         """ Returns the URL to go to after creating/editing/deleting. """
-        return reverse('user-list', args=[self.project.id])
+        return reverse('member-list', args=[self.project.id])
 
     def get_context_data(self, **kwargs):
         """ Appends the Project instance to the context. """
@@ -86,7 +86,7 @@ class UserList(UserMixin, ListView):
         elif p_id == -1:
             return redirect('project-list')
         else:
-            return redirect(reverse('user-list', args=[p_id]))
+            return redirect(reverse('member-list', args=[p_id]))
 
 
 class UserCreate(UserFormMixin, CreateView):
@@ -95,13 +95,4 @@ class UserCreate(UserFormMixin, CreateView):
 
 class UserUpdate(UserFormMixin, UpdateView):
     model = User
-    fields = ['username', 'first_name', 'last_name', 'email', 'role']
-
-
-class UserDelete(UserMixin, DeleteView):
-
-    def post(self, request, *args, **kwargs):
-        """ Prevents non superusers from deleting a user. """
-        if not request.user.is_staff:
-            return render(request, 'forbidden.html', status=403)
-        return super().post(request, *args, **kwargs)
+    fields = ['username', 'first_name', 'last_name', 'email']

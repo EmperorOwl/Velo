@@ -8,11 +8,11 @@ from .user import *
 __all__ = (
     'home',
     'Login', 'Logout',
-    'MemberCreate', 'MemberDelete',
+    'MemberList', 'MemberCreate', 'MemberDelete',
     'ProjectList', 'ProjectCreate', 'ProjectDetail', 'ProjectUpdate', 'ProjectDelete',
     'SprintList', 'SprintCreate', 'SprintUpdate', 'SprintDelete',
     'TaskList', 'TaskCreate', 'TaskUpdate', 'TaskDelete',
-    'UserList', 'UserCreate', 'UserUpdate', 'UserDelete'
+    'UserList', 'UserCreate', 'UserUpdate'
 )
 
 

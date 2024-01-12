@@ -15,7 +15,7 @@
                    value='{% if object %}Save{% else %}Create{% endif %}'>
             <!-- Cancel -->
             <a class='btn btn-secondary text-white text-decoration-none'
-               href='{% url 'user-list' project.id %}'>Cancel</a>
+               href='{% url 'member-list' project.id %}'>Cancel</a>
             <!-- Delete -->
             {% if object %}
                 <button class='btn btn-danger'

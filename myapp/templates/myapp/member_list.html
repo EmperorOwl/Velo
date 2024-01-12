@@ -28,7 +28,7 @@
                             type='submit'>Go
                     </button>
                     <a class='btn btn-secondary text-white text-decoration-none'
-                       href='{% url 'user-list' project.id %}'>Clear</a>
+                       href='{% url 'member-list' project.id %}'>Clear</a>
                 </form>
             </div>
             <!-- Spacing -->
@@ -59,16 +59,16 @@
             </thead>
             <tbody class='table-group-divider'>
             <!-- Rows -->
-            {% for user in users %}
+            {% for member in members %}
                 <tr style='cursor: pointer;'
-                    onclick="window.location.href='{% url 'user-update' project.id user.id %}'">
-                    <td>{{ user.get_username }}</td>
-                    <td>{{ user.get_full_name }}</td>
-                    <td>{{ user.email }}</td>
-                    <td>{{ user.get_role_display }}</td>
-                    <td>{{ user.get_log_time_display }}</td>
-                    <td>{{ user.get_last_login_display }}</td>
-                    {% if user.is_admin or user.is_superuser %}
+                    onclick="window.location.href='{% url 'user-update' project.id member.user.id %}'">
+                    <td>{{ member.user.get_username }}</td>
+                    <td>{{ member.user.get_full_name }}</td>
+                    <td>{{ member.user.email }}</td>
+                    <td>{{ member.get_role_display }}</td>
+                    <td>{{ member.user.get_log_time_display }}</td>
+                    <td>{{ member.user.get_last_login_display }}</td>
+                    {% if member.user.is_admin or member.user.is_superuser %}
                         <td>✅</td>
                     {% else %}
                         <td></td>

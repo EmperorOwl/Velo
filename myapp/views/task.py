@@ -78,6 +78,6 @@ class TaskDelete(TaskMixin, DeleteView):
 
     def post(self, request, *args, **kwargs):
         """ Prevents non guests from deleting a task. """
-        if request.user.is_guest():
+        if request.user.is_staff:
             return render(request, 'forbidden.html', status=403)
         return super().post(request, *args, **kwargs)
