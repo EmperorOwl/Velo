@@ -9,6 +9,7 @@
             <h2 class='mb-3'>{% if object %}Update{% else %}New{% endif %} User</h2>
             {% csrf_token %}
             {% bootstrap_form form %}
+            {% bootstrap_form form2 %}
             <!-- Submit -->
             <input class='btn btn-primary'
                    type='submit'

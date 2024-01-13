@@ -1,8 +1,9 @@
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, CreateView, UpdateView
 from django.views.generic.edit import ContextMixin, FormMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.forms import BaseUserCreationForm
-from django.shortcuts import get_object_or_404, render, reverse, redirect
+from django.forms.models import modelform_factory
+from django.shortcuts import get_object_or_404, reverse, redirect
 
 from ..models import Project, User, Member
 from ..utils import process_form_for_display
@@ -17,6 +18,9 @@ class UserCreationForm(BaseUserCreationForm):
         model = User
         fields = ['username', 'password1', 'password2',
                   'first_name', 'last_name', 'email']
+
+
+ChangeRole = modelform_factory(Member, fields=['role'])
 
 
 # MIXINS ----------------------------------------------------------------------
@@ -48,20 +52,33 @@ class UserFormMixin(UserMixin, FormMixin):
     request = None
 
     def get_form(self, form_class=None):
-        form = super().get_form(form_class)
-        return process_form_for_display(form, user=self.request.user)
+        return process_form_for_display(
+            form=super().get_form(form_class),
+            user=self.request.user
+        )
 
     def form_valid(self, form):
-        """ Add this user to the project's team. """
+        # Add this user to the project's team (will not add duplicate).
         self.object = form.save()
         self.project.team.add(self.object, through_defaults={})
+        # Role will always be valid as it is a dropdown, so skip validation.
+        Member.objects.update_or_create(
+            user=self.object,
+            project=self.project,
+            defaults={'role': self.request.POST['role']}
+        )
         return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
+        # Pass member instance and change role form.
         context = super().get_context_data(**kwargs)
         if self.object:
-            context['member'] = Member.objects.get(project=self.project,
-                                                   user=self.object)
+            member = Member.objects.get(project=self.project,
+                                        user=self.object)
+            context['member'] = member
+            context['form2'] = ChangeRole(instance=member)
+        else:
+            context['form2'] = ChangeRole()
         return context
 
 
