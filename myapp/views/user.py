@@ -48,6 +48,7 @@ class UserMixin(LoginRequiredMixin, ContextMixin):
 
 
 class UserFormMixin(UserMixin, FormMixin):
+    context_object_name = 'object'  # Prevents conflict with request.user
     object = None
     request = None
 
