@@ -54,7 +54,6 @@
                 <th>Role</th>
                 <th>Log Time</th>
                 <th>Last Login</th>
-                <th>Admin</th>
             </tr>
             </thead>
             <tbody class='table-group-divider'>
@@ -68,11 +67,6 @@
                     <td>{{ member.get_role_display }}</td>
                     <td>{{ member.user.get_log_time_display }}</td>
                     <td>{{ member.user.get_last_login_display }}</td>
-                    {% if member.user.is_admin or member.user.is_superuser %}
-                        <td>✅</td>
-                    {% else %}
-                        <td></td>
-                    {% endif %}
                 </tr>
             {% endfor %}
             </tbody>
