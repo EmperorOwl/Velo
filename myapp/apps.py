@@ -35,6 +35,7 @@ def create_default_objects(sender, **kwargs):
             email='guest@example.com',
             password='guest',
             first_name='Guest',
+            is_guest=True
         )
     else:
         guest = User.objects.get(username='guest')

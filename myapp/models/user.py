@@ -13,6 +13,9 @@ class User(AbstractUser):
         on_delete=models.SET_NULL,
         null=True
     )
+    is_guest = models.BooleanField(
+        default=False
+    )
 
     def set_last_visited_project(self, project):
         """ Setter """
