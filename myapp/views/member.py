@@ -2,6 +2,7 @@ from django.views.generic import ListView, CreateView, DeleteView
 from django.views.generic.edit import ContextMixin, FormMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404, render, reverse, redirect
+from django.db import IntegrityError
 
 from ..models import Project, Member
 from ..utils import process_form_for_display
@@ -41,7 +42,11 @@ class MemberFormMixin(MemberMixin, FormMixin):
     def form_valid(self, form):
         """ Sets this member's project to the project. """
         form.instance.project = self.project
-        return super().form_valid(form)
+        try:
+            return super().form_valid(form)
+        except IntegrityError:
+            form.add_error('user', "This user is already a member of this project.")
+            return self.form_invalid(form)
 
 
 # VIEWS -----------------------------------------------------------------------
