@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang='en'>
 <head>
@@ -6,8 +7,9 @@
 <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
 
-<!-- Title-->
+<!-- Tab -->
 <title>{% block title %}{% endblock %}</title>
+<link rel='shortcut icon' type='image/x-icon' href='{% static 'images/fav-icon.png' %}'>
 
 <!-- Bootstrap -->
 {% load django_bootstrap5 %}
