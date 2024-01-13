@@ -5,6 +5,10 @@ from django.utils import timezone
 from ..choices import TaskType, TaskPriority, TaskStatus
 
 
+def get_default_task_end_date():
+    return timezone.now() + timezone.timedelta(days=3)
+
+
 class Task(models.Model):
     """ Represents a task.
     Each task is linked to a sprint.
@@ -27,7 +31,7 @@ class Task(models.Model):
         default=timezone.now
     )
     due_date = models.DateTimeField(
-        default=timezone.now() + timezone.timedelta(days=3)
+        default=get_default_task_end_date
     )
     story_points = models.IntegerField(
         default=5,

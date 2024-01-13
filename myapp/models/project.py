@@ -5,6 +5,10 @@ from ..choices import ProjectStatus
 from ..utils import Progress
 
 
+def get_default_project_end_date():
+    return timezone.now() + timezone.timedelta(weeks=6)
+
+
 class Project(models.Model):
     """ Represents a project. """
     name = models.CharField(
@@ -14,7 +18,7 @@ class Project(models.Model):
         default=timezone.now
     )
     end_date = models.DateTimeField(
-        default=timezone.now() + timezone.timedelta(weeks=6)
+        default=get_default_project_end_date
     )
     status = models.IntegerField(
         choices=ProjectStatus.choices,

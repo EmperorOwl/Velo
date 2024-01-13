@@ -5,6 +5,10 @@ from ..choices import SprintStatus, TaskStatus
 from ..utils import Progress
 
 
+def get_default_sprint_end_date():
+    return timezone.now() + timezone.timedelta(weeks=2)
+
+
 class Sprint(models.Model):
     """ Represents a sprint.
     Each sprint is linked to a project.
@@ -21,7 +25,7 @@ class Sprint(models.Model):
         default=timezone.now
     )
     end_date = models.DateTimeField(
-        default=timezone.now() + timezone.timedelta(weeks=2)
+        default=get_default_sprint_end_date
     )
     status = models.IntegerField(
         choices=SprintStatus.choices,
