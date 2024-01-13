@@ -28,6 +28,7 @@ ALLOWED_HOSTS = [
 INSTALLED_APPS = [
     'myapp.apps.MyappConfig',  # Added the app.
     'django_bootstrap5',  # Added bootstrap.
+    'django_bootstrap_icons',  # Added bootstrap icons.
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

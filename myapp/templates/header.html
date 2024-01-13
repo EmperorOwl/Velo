@@ -1,3 +1,18 @@
+{% load bootstrap_icons %}
+
+
+{% block style %}
+    <style>
+        .gear-icon {
+            margin-bottom: 3px;
+        }
+
+        .nav-item:hover, .gear-icon:hover {
+            opacity: 0.8;
+        }
+    </style>
+{% endblock %}
+
 <!-- Guest -->
 {% if user.is_guest %}
     <div class='py-2 bg-light border-bottom d-flex justify-content-center align-items-center'>
@@ -40,7 +55,7 @@
                                 name='project-id'
                                 onchange="document.getElementById('projectForm').submit()"
                                 aria-label='project-dropdown'
-                                {% if 'create' in request.path or 'update' in request.path %}
+                                {% if 'create' in request.path or 'update' in request.path or 'settings' in request.path %}
                                 disabled {% endif %}>
                             {% for project in user.projects.all %}
                                 <option value='{{ project.id }}'
@@ -79,10 +94,16 @@
                 {% endif %}
             </ul>
             <!-- Left Links -->
-            <div class='d-flex'>
+            <div class='d-flex align-items-center'>
                 {% if user.is_authenticated %}
                     <!-- Greeting -->
                     <span class='navbar-text text-white me-3'>Hi {{ user.first_name }}</span>
+                    <!-- Settings -->
+                    <a class='gear-icon me-3'
+                       title='View your settings!'
+                       href='{% url 'settings' %}'>
+                        {% bs_icon 'gear-fill' color='white' %}
+                    </a>
                     <!-- Logout -->
                     <form id='logoutForm' method='post' action='{% url 'logout' %}'>
                         {% csrf_token %}

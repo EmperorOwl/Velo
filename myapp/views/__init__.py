@@ -6,7 +6,7 @@ from .task import *
 from .user import *
 
 __all__ = (
-    'home',
+    'home', 'settings',
     'Login', 'Logout',
     'MemberList', 'MemberCreate', 'MemberDelete',
     'ProjectList', 'ProjectCreate', 'ProjectDetail', 'ProjectUpdate', 'ProjectDelete',
@@ -26,3 +26,7 @@ def home(request):
         return redirect(reverse('project-list'))
     # Otherwise show home page.
     return render(request, 'home.html')
+
+
+def settings(request):
+    return render(request, 'settings.html')
