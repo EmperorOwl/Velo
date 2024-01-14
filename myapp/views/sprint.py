@@ -54,7 +54,7 @@ class SprintList(SprintMixin, ListView):
 
     def get_queryset(self):
         """ Returns this project's sprints. """
-        sprints = self.project.sprints.all()
+        sprints = self.project.sprints.order_by('status')
         search_query = self.request.GET.get('search', '')
         if search_query:
             sprints = sprints.filter(name__icontains=search_query)

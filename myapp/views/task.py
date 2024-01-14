@@ -50,6 +50,7 @@ class TaskList(TaskMixin, ListView):
     def get_queryset(self):
         """ Returns this project's Tasks. """
         tasks = Task.objects.filter(sprint__in=self.project.sprints.all())
+        tasks = tasks.order_by('-due_date')
         search_query = self.request.GET.get('search', '')
         if search_query:
             tasks = tasks.filter(name__icontains=search_query)

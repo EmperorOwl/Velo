@@ -40,7 +40,7 @@ class ProjectList(ProjectMixin, ListView):
 
     def get_queryset(self):
         """ Returns the current user's projects. """
-        projects = self.request.user.projects.all()
+        projects = self.request.user.projects.order_by('status')
         search_query = self.request.GET.get('search', '')
         if search_query:
             projects = projects.filter(name__icontains=search_query)
