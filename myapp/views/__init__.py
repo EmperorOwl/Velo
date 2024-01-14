@@ -10,7 +10,7 @@ __all__ = (
     'Login', 'Logout', 'PasswordChange',
     'MemberList', 'MemberCreate', 'MemberDelete',
     'ProjectList', 'ProjectCreate', 'ProjectDetail', 'ProjectUpdate', 'ProjectDelete',
-    'SprintList', 'SprintCreate', 'SprintUpdate', 'SprintDelete',
+    'SprintList', 'SprintCreate', 'SprintUpdate', 'SprintDetail', 'SprintDelete',
     'TaskList', 'TaskCreate', 'TaskUpdate', 'TaskDelete',
     'UserList', 'UserCreate', 'UserUpdate'
 )

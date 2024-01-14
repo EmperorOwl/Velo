@@ -1,9 +1,11 @@
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, DetailView
+from django.views.generic import CreateView, UpdateView, DeleteView
 from django.views.generic.edit import ContextMixin, FormMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404, render, reverse, redirect
 
-from ..models import Project, Sprint
+from ..models import Project, Sprint, Task
+from ..choices import TaskStatus
 from ..utils import process_form_for_display
 
 
@@ -69,6 +71,24 @@ class SprintList(SprintMixin, ListView):
             return redirect('project-list')
         else:
             return redirect(reverse('sprint-list', args=[p_id]))
+
+
+class SprintDetail(SprintMixin, DetailView):
+    """ Scrum Board """
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        search_query = self.request.GET.get('search', '')
+        status_to_tasks = {}
+        for status in TaskStatus:
+            tasks = Task.objects.filter(sprint=self.object, status=status)
+            if search_query:
+                tasks = tasks.filter(name__icontains=search_query)
+            key = status.name.replace('_', ' ').title()
+            status_to_tasks[key] = tasks
+        context['status_to_tasks'] = status_to_tasks
+        self.request.session['previous_page'] = self.request.path
+        return context
 
 
 class SprintCreate(SprintFormMixin, CreateView):

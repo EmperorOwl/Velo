@@ -14,8 +14,9 @@
                    type='submit'
                    value='{% if object %}Save{% else %}Create{% endif %}'>
             <!-- Cancel -->
-            <a class='btn btn-secondary text-white text-decoration-none'
-               href='{% url 'task-list' project.id %}'>Cancel</a>
+            <button class='btn btn-secondary text-white text-decoration-none'
+                    onclick='history.back()'>Cancel
+            </button>
             <!-- Delete -->
             {% if object %}
                 <button class='btn btn-danger'

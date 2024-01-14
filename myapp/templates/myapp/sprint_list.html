@@ -34,7 +34,7 @@
 {% endblock %}
 
 {% block main %}
-    <div class='container mt-5 mb-5'>
+    <div class='container my-5'>
         <!-- Description -->
         <h2 class='mb-3'>{{ project.name }}'s Sprints</h2>
         <p>View your sprints ordered by status.</p>
@@ -87,7 +87,7 @@
                             </p>
                             <p class='card-text'>{{ sprint.get_log_time_display }} logged</p>
                             <a class="card-link"
-                               href="{% url 'home' %}">Scrum Board</a>
+                               href="{% url 'sprint-detail' project.id sprint.id %}">Scrum Board</a>
                             <a class="card-link"
                                href="{% url 'home' %}">Burndown Chart</a>
                         </div>

@@ -1,7 +1,7 @@
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.views.generic.edit import ContextMixin, FormMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import get_object_or_404, render, reverse, redirect
+from django.shortcuts import get_object_or_404, render, reverse, redirect, resolve_url
 
 from ..models import Project, Sprint, Task
 from ..utils import process_form_for_display
@@ -12,6 +12,7 @@ from ..utils import process_form_for_display
 class TaskMixin(LoginRequiredMixin, ContextMixin):
     model = Task
     pk_url_kwarg = 't_id'
+    request = None
     kwargs = None
     project = None
 
@@ -22,6 +23,8 @@ class TaskMixin(LoginRequiredMixin, ContextMixin):
 
     def get_success_url(self):
         """ Returns the URL to go to after creating/editing/deleting. """
+        if 'previous_page' in self.request.session:
+            return resolve_url(self.request.session['previous_page'])
         return reverse('task-list', args=[self.project.id])
 
     def get_context_data(self, **kwargs):
@@ -33,7 +36,6 @@ class TaskMixin(LoginRequiredMixin, ContextMixin):
 
 class TaskFormMixin(TaskMixin, FormMixin):
     fields = '__all__'
-    request = None
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
@@ -58,6 +60,7 @@ class TaskList(TaskMixin, ListView):
 
     def get(self, request, *args, **kwargs):
         p_id = int(request.GET.get('project-id', -2))
+        self.request.session['previous_page'] = self.request.path
         if p_id == -2:
             request.user.set_last_visited_project(self.project)
             return super().get(request, *args, **kwargs)
@@ -79,6 +82,6 @@ class TaskDelete(TaskMixin, DeleteView):
 
     def post(self, request, *args, **kwargs):
         """ Prevents non guests from deleting a task. """
-        if request.user.is_staff:
+        if not request.user.is_staff:
             return render(request, 'forbidden.html', status=403)
         return super().post(request, *args, **kwargs)
