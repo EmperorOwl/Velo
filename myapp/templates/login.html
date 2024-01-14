@@ -28,7 +28,7 @@
 
 {% block main %}
     <div class='d-flex justify-content-center align-items-center min-vh-100 bg-light'>
-        <form class='form-login w-25' method='post'>
+        <form class='form-login' style='min-width: 25%' method='post'>
             {% csrf_token %}
             <h1 class='h3 mb-3 fw-normal'>Please login</h1>
             <div class='form-floating'>
@@ -68,4 +68,3 @@
 {% endblock %}
 
 {% block footer %}{% endblock %}
-
