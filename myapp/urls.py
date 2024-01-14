@@ -5,7 +5,7 @@ from .views import *
 urls = [
     # Misc
     ('', home, 'home'),
-    ('settings', settings, 'settings'),
+    ('settings', PasswordChange.as_view(), 'settings'),
     # User
     ('login', Login.as_view(), 'login'),
     ('demo', Login.as_view(guest_login=True), 'demo'),

@@ -1,11 +1,36 @@
 {% extends 'base.html' %}
+{% load django_bootstrap5 %}
 
 {% block title %}Settings{% endblock %}
-
 
 {% block main %}
     <div class='container mt-5 mb-5'>
         <h2 class='mb-3'>Settings</h2>
-        <a href='#'>Change Password</a>
+        <p>Customise your preferences below.</p>
+        <div class='d-flex align-items-center'>
+            <a class='btn btn-secondary'
+               data-bs-toggle='collapse'
+               href='#collapse'
+               role='button'
+               aria-expanded='false'
+               aria-controls='collapseExample'>
+                Change Password
+            </a>
+            {% for message in messages %}
+                <p class='messages d-inline {{ message.tags }} mb-0 ms-2'>
+                    {{ message }}
+                </p>
+            {% endfor %}
+        </div>
+        <div class='collapse mt-2 border border-2 rounded'
+             id='collapse'>
+            <form class='p-4' method='post'>
+                {% csrf_token %}
+                {% bootstrap_form form %}
+                <button class='btn btn-primary'
+                        type='submit'>Save
+                </button>
+            </form>
+        </div>
     </div>
 {% endblock %}

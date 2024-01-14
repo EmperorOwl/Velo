@@ -1,8 +1,10 @@
-from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView
+from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.shortcuts import redirect, reverse, resolve_url
 
 from ..models import User
+from ..utils import process_form_for_display
 
 
 class Login(LoginView):
@@ -38,3 +40,34 @@ class Login(LoginView):
 
 class Logout(LogoutView):
     template_name = 'logout.html'
+
+
+class PasswordChange(PasswordChangeView):
+    template_name = 'settings.html'
+    success_url = 'settings'
+    success_message = "Password successfully changed!"
+    fail_message = "Password could not be updated. Please try again."
+
+    def get_form(self, form_class=None):
+        return process_form_for_display(
+            form=super().get_form(form_class),
+            user=self.request.user
+        )
+
+    def form_valid(self, form):
+        messages.add_message(
+            self.request,
+            messages.SUCCESS,
+            self.success_message,
+            extra_tags='text-success'
+        )
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        messages.add_message(
+            self.request,
+            messages.WARNING,
+            self.fail_message,
+            extra_tags='text-danger'
+        )
+        return super().form_invalid(form)
