@@ -80,6 +80,10 @@ class UserFormMixin(UserMixin, FormMixin):
             context['form2'] = ChangeRole(instance=member)
         else:
             context['form2'] = ChangeRole()
+        context['form2'] = process_form_for_display(
+            form=context['form2'],
+            user=self.request.user
+        )
         return context
 
 
