@@ -3,27 +3,24 @@
 {% block title %}Team{% endblock %}
 
 {% block main %}
-    <div class='container mt-5 mb-5'>
+    <div class='container my-5'>
         <!-- Description -->
-        <div class='row'>
-            <h2 class='mb-3'>Your Team</h2>
-            <p>View all registered users.</p>
-            <p>Click on a user to view or edit its details.</p>
-        </div>
+        <h2 class='mb-3'>Your Team</h2>
+        <p>View all registered users.</p>
+        <p>Click on a user to view or edit its details.</p>
         <!-- Navigation -->
-        <div class='row mb-4'>
+        <div class='d-flex flex-wrap'>
             <!-- Search Bar -->
-            <div class='col-5'>
+            <div class='me-auto mb-2'>
                 <form class='input-group' method='GET'>
                     <input class='form-control shadow-none'
                            type='text'
-                           id='searchBar'
                            name='search'
+                           aria-label='search'
                            value='{{ request.GET.search }}'
                            placeholder='Search for a user ... '
                            autofocus
                            onfocus='this.setSelectionRange(this.value.length,this.value.length);'>
-                    <label for='searchBar'></label>
                     <button class='btn btn-success'
                             type='submit'>Go
                     </button>
@@ -31,45 +28,45 @@
                        href='{% url 'member-list' project.id %}'>Clear</a>
                 </form>
             </div>
-            <!-- Spacing -->
-            <div class='col-3'></div>
             <!-- Add Existing User Button -->
-            <div class='col-2'>
+            <div class='me-5'>
                 <a class='btn btn-primary'
                    href={% url 'member-create' project.id %}>Add Existing User</a>
             </div>
             <!-- Create New User Button -->
-            <div class='col-2'>
+            <div class='me-5'>
                 <a class='btn btn-primary'
                    href={% url 'user-create' project.id %}>Add New User</a>
             </div>
         </div>
         <!-- Table View -->
-        <table class='table table-hover mt-3'>
-            <thead>
-            <tr>
-                <th>Username</th>
-                <th>Display Name</th>
-                <th>Email</th>
-                <th>Role</th>
-                <th>Log Time</th>
-                <th>Last Login</th>
-            </tr>
-            </thead>
-            <tbody class='table-group-divider'>
-            <!-- Rows -->
-            {% for member in members %}
-                <tr style='cursor: pointer;'
-                    onclick="window.location.href='{% url 'user-update' project.id member.user.id %}'">
-                    <td>{{ member.user.get_username }}</td>
-                    <td>{{ member.user.get_full_name }}</td>
-                    <td>{{ member.user.email }}</td>
-                    <td>{{ member.get_role_display }}</td>
-                    <td>{{ member.user.get_log_time_display }}</td>
-                    <td>{{ member.user.get_last_login_display }}</td>
+        <div class='table-responsive mt-3'>
+            <table class='table table-hover'>
+                <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Display Name</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Log Time</th>
+                    <th>Last Login</th>
                 </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+                </thead>
+                <tbody class='table-group-divider'>
+                <!-- Rows -->
+                {% for member in members %}
+                    <tr style='cursor: pointer;'
+                        onclick="window.location.href='{% url 'user-update' project.id member.user.id %}'">
+                        <td>{{ member.user.get_username }}</td>
+                        <td>{{ member.user.get_full_name }}</td>
+                        <td>{{ member.user.email }}</td>
+                        <td>{{ member.get_role_display }}</td>
+                        <td>{{ member.user.get_log_time_display }}</td>
+                        <td>{{ member.user.get_last_login_display }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 {% endblock %}
