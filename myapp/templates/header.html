@@ -55,7 +55,7 @@
                                 name='project-id'
                                 onchange="document.getElementById('projectForm').submit()"
                                 aria-label='project-dropdown'
-                                {% if 'create' in request.path or 'update' in request.path or 'settings' in request.path or 'board' in request.path %}
+                                {% if 'create' in request.path or 'update' in request.path or 'settings' in request.path or 'board' in request.path and not 'dashboard' in request.path %}
                                 disabled {% endif %}>
                             {% for project in user.projects.all %}
                                 <option value='{{ project.id }}'
