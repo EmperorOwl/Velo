@@ -36,8 +36,7 @@ class TaskMixin(LoginRequiredMixin, ContextMixin):
 
 
 AssigneeFormset = inlineformset_factory(Task, Assignee,
-                                        fields=['user', 'hours_worked'],
-                                        extra=1)
+                                        fields=['user', 'hours_worked'])
 
 
 class TaskFormMixin(TaskMixin, FormMixin):
@@ -63,6 +62,7 @@ class TaskFormMixin(TaskMixin, FormMixin):
     def get_context_data(self, **kwargs):
         """ Adds the assignee formset to the context. """
         context = super().get_context_data(**kwargs)
+        AssigneeFormset.extra = 0 if self.object else 1
         formset = AssigneeFormset(instance=self.object)
         for form in formset:
             # Dropdown should only show users in this project
