@@ -6,7 +6,7 @@ from django.forms.models import modelform_factory
 from django.shortcuts import get_object_or_404, reverse, redirect
 
 from ..models import Project, User, Member
-from ..utils import process_form_for_display
+from ..utils import pretty_form
 
 
 # FORMS -----------------------------------------------------------------------
@@ -53,7 +53,7 @@ class UserFormMixin(UserMixin, FormMixin):
     request = None
 
     def get_form(self, form_class=None):
-        return process_form_for_display(
+        return pretty_form(
             form=super().get_form(form_class),
             user=self.request.user
         )
@@ -80,7 +80,7 @@ class UserFormMixin(UserMixin, FormMixin):
             context['form2'] = ChangeRole(instance=member)
         else:
             context['form2'] = ChangeRole()
-        context['form2'] = process_form_for_display(
+        context['form2'] = pretty_form(
             form=context['form2'],
             user=self.request.user
         )

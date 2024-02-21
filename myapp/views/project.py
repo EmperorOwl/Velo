@@ -5,7 +5,7 @@ from django.shortcuts import render, reverse, redirect
 from django.urls import reverse_lazy
 
 from ..models import Project
-from ..utils import process_form_for_display
+from ..utils import pretty_form
 
 
 # MIXINS ----------------------------------------------------------------------
@@ -24,7 +24,7 @@ class ProjectFormMixin(ProjectMixin, FormMixin):
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
         form.fields.pop('team')
-        return process_form_for_display(form, self.request.user)
+        return pretty_form(form, self.request.user)
 
     def form_valid(self, form):
         """ Adds the user who created the project to their project. """

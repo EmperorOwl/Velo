@@ -5,7 +5,7 @@ from django.shortcuts import get_object_or_404, render, reverse, redirect, resol
 from django.forms import inlineformset_factory
 
 from ..models import Project, Task, Assignee
-from ..utils import process_form_for_display
+from ..utils import pretty_form
 
 
 # MIXINS ----------------------------------------------------------------------
@@ -48,7 +48,7 @@ class TaskFormMixin(TaskMixin, FormMixin):
         form.fields.pop('assignees')
         # Dropdown should only show sprints in this project.
         form.fields['sprint'].queryset = self.project.sprints
-        return process_form_for_display(form, user=self.request.user)
+        return pretty_form(form, user=self.request.user)
 
     def form_valid(self, form):
         self.object = form.save()

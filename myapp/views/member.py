@@ -5,7 +5,7 @@ from django.shortcuts import get_object_or_404, render, reverse, redirect
 from django.db import IntegrityError
 
 from ..models import Project, Member
-from ..utils import process_form_for_display
+from ..utils import pretty_form
 
 
 class MemberMixin(LoginRequiredMixin, ContextMixin):
@@ -37,7 +37,7 @@ class MemberFormMixin(MemberMixin, FormMixin):
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
         form.fields.pop('project')
-        return process_form_for_display(form, user=self.request.user)
+        return pretty_form(form, user=self.request.user)
 
     def form_valid(self, form):
         """ Sets this member's project to the project. """

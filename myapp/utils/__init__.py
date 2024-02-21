@@ -1,7 +1,9 @@
-from .helper import process_form_for_display
+from .pretty import pretty_form, pretty_hour, pretty_date
 from .progress import Progress
 
 __all__ = (
-    'process_form_for_display',
+    'pretty_form',
+    'pretty_hour',
+    'pretty_date',
     'Progress',
 )

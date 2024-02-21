@@ -6,7 +6,7 @@ from django.shortcuts import get_object_or_404, render, reverse, redirect
 
 from ..models import Project, Sprint, Task
 from ..choices import TaskStatus
-from ..utils import process_form_for_display
+from ..utils import pretty_form
 
 
 # MIXINS ----------------------------------------------------------------------
@@ -41,7 +41,7 @@ class SprintFormMixin(SprintMixin, FormMixin):
         """ Removes selection of which project from form. """
         form = super().get_form(form_class)
         form.fields.pop('project')
-        return process_form_for_display(form, self.request.user)
+        return pretty_form(form, self.request.user)
 
     def form_valid(self, form):
         """ Sets this sprint's project to the project. """

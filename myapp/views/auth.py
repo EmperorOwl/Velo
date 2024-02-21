@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login
 from django.shortcuts import redirect, reverse, resolve_url
 
 from ..models import User
-from ..utils import process_form_for_display
+from ..utils import pretty_form
 
 
 class Login(LoginView):
@@ -49,7 +49,7 @@ class PasswordChange(PasswordChangeView):
     fail_message = "Password could not be updated. Please try again."
 
     def get_form(self, form_class=None):
-        return process_form_for_display(
+        return pretty_form(
             form=super().get_form(form_class),
             user=self.request.user
         )

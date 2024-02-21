@@ -1,7 +1,8 @@
 from django.forms import DateTimeInput, CheckboxSelectMultiple
+from django.utils import timezone as tmz
 
 
-def process_form_for_display(form, user):
+def pretty_form(form, user):
     # Update some fields.
     for field_name, field in form.fields.items():
         # User should only be able to assign a task to a team member
@@ -17,3 +18,17 @@ def process_form_for_display(form, user):
         for field in form.fields.values():
             field.widget.attrs['disabled'] = True
     return form
+
+
+def pretty_hour(t: float):
+    """ Converts 2.1 to 2.1 hours or 1.0 to 1 hour """
+    if not t:
+        return ''
+    return str(t).replace('.0', '') + ' hour' + ('s' if t != 1 else '')
+
+
+def pretty_date(d):
+    """ Converts datetime to day and month and year if different year. """
+    if not d:
+        return ''
+    return d.strftime('%b %d' + (', %Y' if d.year != tmz.now().year else ''))
