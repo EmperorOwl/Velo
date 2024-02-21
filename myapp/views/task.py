@@ -2,8 +2,9 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.views.generic.edit import ContextMixin, FormMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404, render, reverse, redirect, resolve_url
+from django.forms import inlineformset_factory
 
-from ..models import Project, Sprint, Task
+from ..models import Project, Task, Assignee
 from ..utils import process_form_for_display
 
 
@@ -34,14 +35,43 @@ class TaskMixin(LoginRequiredMixin, ContextMixin):
         return context
 
 
+AssigneeFormset = inlineformset_factory(Task, Assignee,
+                                        fields=['user', 'hours_worked'],
+                                        extra=1)
+
+
 class TaskFormMixin(TaskMixin, FormMixin):
     fields = '__all__'
+    object = None
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
+        form.fields.pop('assignees')
         # Dropdown should only show sprints in this project.
-        form.fields['sprint'].queryset = Sprint.objects.filter(project=self.project)
+        form.fields['sprint'].queryset = self.project.sprints
         return process_form_for_display(form, user=self.request.user)
+
+    def form_valid(self, form):
+        self.object = form.save()
+        formset = AssigneeFormset(self.request.POST, instance=self.object)
+        if formset.is_valid():
+            formset.save()
+        else:
+            return super().form_invalid(form)
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        """ Adds the assignee formset to the context. """
+        context = super().get_context_data(**kwargs)
+        formset = AssigneeFormset(instance=self.object)
+        for form in formset:
+            # Dropdown should only show users in this project
+            form.fields['user'].queryset = self.project.team
+            # Remove labels from all fields
+            for field in form.fields.values():
+                field.label = ""
+        context['formset'] = formset
+        return context
 
 
 # VIEWS -----------------------------------------------------------------------

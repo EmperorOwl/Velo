@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 {% load django_bootstrap5 %}
 
 {% block title %}{% if object %}Update{% else %}New{% endif %} Task{% endblock %}
@@ -9,6 +10,44 @@
             <h2 class='mb-3'>{% if object %}Update{% else %}New{% endif %} Task</h2>
             {% csrf_token %}
             {% bootstrap_form form %}
+            <!-- Assignees -->
+            <div class='container mb-5'>
+                <table class='table'>
+                    <thead>
+                    <tr>
+                        <th>Assignee</th>
+                        <th>Hours Worked</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{ formset.management_form }}  <!-- Hidden data required by Django -->
+                    {% for form in formset.forms %}
+                        <tr>
+                            {{ form.id }}  <!-- Hidden field required by Django -->
+                            <td>{% bootstrap_field form.user %}</td>
+                            <td>{% bootstrap_field form.hours_worked %}</td>
+                            <td>
+                                <!-- Manually hide this field that acts as delete flag for Django -->
+                                <div style='display: none'>{{ form.DELETE }}</div>
+                                <!-- Remove Assignee Button -->
+                                <button type='button' class='btn btn-outline-light'
+                                        onclick='removeAssignee(this)'>🗑️
+                                </button>
+                            </td>
+                            <td> <!-- Errors column -->
+                                {% for _, error in form.errors.items %}
+                                    {{ error }}
+                                {% endfor %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                <!-- Add Assignee Button -->
+                <button type="button" class="btn btn-sm btn-light" onclick="addAssignee()">+Add</button>
+            </div>
             <!-- Submit -->
             <input class='btn btn-primary'
                    type='submit'
@@ -75,4 +114,6 @@
             myInput.focus()
         })
     </script>
+    <!-- Script -->
+    <script src="{% static 'scripts/assignee.js' %}"></script>
 {% endblock %}
