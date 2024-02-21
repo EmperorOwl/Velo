@@ -19,7 +19,8 @@ urls = [
     # Sprint
     ('projects/<int:p_id>/sprints', SprintList.as_view(), 'sprint-list'),
     ('projects/<int:p_id>/sprints/create', SprintCreate.as_view(), 'sprint-create'),
-    ('projects/<int:p_id>/sprints/<int:s_id>/board', SprintDetail.as_view(), 'sprint-detail'),
+    ('projects/<int:p_id>/sprints/<int:s_id>/board', SprintBoard.as_view(), 'sprint-board'),
+    ('projects/<int:p_id>/sprints/<int:s_id>/chart', SprintChart.as_view(), 'sprint-chart'),
     ('projects/<int:p_id>/sprints/<int:s_id>/update', SprintUpdate.as_view(), 'sprint-update'),
     ('projects/<int:p_id>/sprints/<int:s_id>/delete', SprintDelete.as_view(), 'sprint-delete'),
     # Task

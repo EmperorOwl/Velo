@@ -87,9 +87,9 @@
                             </p>
                             <p class='card-text'>{{ sprint.get_log_time_display }} logged</p>
                             <a class="card-link"
-                               href="{% url 'sprint-detail' project.id sprint.id %}">Scrum Board</a>
+                               href="{% url 'sprint-board' project.id sprint.id %}">Scrum Board</a>
                             <a class="card-link"
-                               href="{% url 'home' %}">Burndown Chart</a>
+                               href="{% url 'sprint-chart' project.id sprint.id %}">Burndown Chart</a>
                         </div>
                     </div>
                 </div>

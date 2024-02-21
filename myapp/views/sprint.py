@@ -6,7 +6,7 @@ from django.shortcuts import get_object_or_404, render, reverse, redirect
 
 from ..models import Project, Sprint, Task
 from ..choices import TaskStatus
-from ..utils import pretty_form
+from ..utils import pretty_form, get_burndown_chart
 
 
 # MIXINS ----------------------------------------------------------------------
@@ -73,8 +73,9 @@ class SprintList(SprintMixin, ListView):
             return redirect(reverse('sprint-list', args=[p_id]))
 
 
-class SprintDetail(SprintMixin, DetailView):
+class SprintBoard(SprintMixin, DetailView):
     """ Scrum Board """
+    template_name = 'myapp/sprint_board.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -88,6 +89,16 @@ class SprintDetail(SprintMixin, DetailView):
             status_to_tasks[key] = tasks
         context['status_to_tasks'] = status_to_tasks
         self.request.session['previous_page'] = self.request.path
+        return context
+
+
+class SprintChart(SprintMixin, DetailView):
+    """ Burndown Chart """
+    template_name = 'myapp/sprint_chart.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['chart'] = get_burndown_chart(sprint=self.object)
         return context
 
 

@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block title %}Burndown Chart{% endblock %}
+
+{% block main %}
+    <div class='container mt-5 mb-5'>
+        <img class='img-fluid' src='data:image/png;base64,{{ chart }}' alt='burndown chart'>
+    </div>
+{% endblock %}
