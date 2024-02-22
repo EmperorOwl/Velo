@@ -75,7 +75,7 @@
                             <h5 class='card-title mb-3'>{{ project.name }}</h5>
                             <p class='card-text mb-2'>{{ project.get_status_display }}</p>
                             <p class='card-text mb-2'>
-                                {{ project.start_date|date:'d/m/Y' }} - {{ project.end_date|date:'d/m/Y' }}
+                                {{ project.get_start_date_display }} - {{ project.get_end_date_display }}
                             </p>
                             <p class='card-text mb-2'>
                                 {{ project.point_progress.completed }}/{{ project.point_progress.total }}
