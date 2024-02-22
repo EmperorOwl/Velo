@@ -2,7 +2,7 @@ from django.db import models
 from django.utils import timezone
 
 from ..choices import ProjectStatus
-from ..utils import Progress, pretty_date
+from ..utils import Progress, pretty_date, pretty_hour
 
 
 def get_default_project_end_date():
@@ -68,8 +68,7 @@ class Project(models.Model):
 
     def get_log_time_display(self) -> str:
         """ Returns the string representation. """
-        t = self.log_time()
-        return str(t).replace('.0', '') + ' hour' + ('s' if t != 1 else '')
+        return pretty_hour(self.log_time())
 
     def __str__(self) -> str:
         """ Returns the string representation. """
