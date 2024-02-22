@@ -1,7 +1,7 @@
 from django.views.generic import ListView, CreateView, UpdateView
 from django.views.generic.edit import ContextMixin, FormMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.forms import BaseUserCreationForm
+from django.contrib.auth.forms import BaseUserCreationForm, SetPasswordForm
 from django.forms.models import modelform_factory
 from django.shortcuts import get_object_or_404, reverse, redirect
 
@@ -68,6 +68,12 @@ class UserFormMixin(UserMixin, FormMixin):
             project=self.project,
             defaults={'role': self.request.POST['role']}
         )
+        form3 = SetPasswordForm(self.object, self.request.POST)
+        if self.request.POST['new_password1']:
+            if form3.is_valid():
+                form3.save()
+            else:
+                return super().form_invalid(form)
         return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
@@ -78,6 +84,9 @@ class UserFormMixin(UserMixin, FormMixin):
                                         user=self.object)
             context['member'] = member
             context['form2'] = ChangeRole(instance=member)
+            context['form3'] = SetPasswordForm(user=member.user)
+            for field in context['form3'].fields.values():
+                field.required = False
         else:
             context['form2'] = ChangeRole()
         context['form2'] = pretty_form(
