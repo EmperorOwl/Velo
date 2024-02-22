@@ -65,33 +65,33 @@
                             </div>
                         </div>
                     </div>
+                    <!-- Charts -->
+                    <div id='chartCarousel'
+                         class='carousel carousel-dark slide'
+                         data-bs-interval='false'>
+                        <div class='carousel-inner'>
+                            {% for chart in charts %}
+                                <div class='carousel-item{% if forloop.first %} active{% endif %}'>
+                                    <img class='d-block w-100 px-5'
+                                         src='data:image/png;base64,{{ chart }}'
+                                         alt='chart'>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <button class='carousel-control-prev' type='button'
+                                data-bs-target='#chartCarousel' data-bs-slide='prev'>
+                            <span class='carousel-control-prev-icon' aria-hidden='true'></span>
+                            <span class='visually-hidden'>Previous</span>
+                        </button>
+                        <button class='carousel-control-next' type='button'
+                                data-bs-target='#chartCarousel' data-bs-slide='next'>
+                            <span class='carousel-control-next-icon' aria-hidden='true'></span>
+                            <span class='visually-hidden'>Next</span>
+                        </button>
+                    </div>
                 {% else %}
                     <strong>There are currently no active sprints.</strong>
                 {% endif %}
-                <!-- Graphs -->
-                <div id='chartCarousel'
-                     class='carousel carousel-dark slide'
-                     data-bs-interval='false'>
-                    <div class='carousel-inner'>
-                        {% for chart in charts %}
-                            <div class='carousel-item{% if forloop.first %} active{% endif %}'>
-                                <img class='d-block w-100 px-5'
-                                     src='data:image/png;base64,{{ chart }}'
-                                     alt='chart'>
-                            </div>
-                        {% endfor %}
-                    </div>
-                    <button class='carousel-control-prev' type='button'
-                            data-bs-target='#chartCarousel' data-bs-slide='prev'>
-                        <span class='carousel-control-prev-icon' aria-hidden='true'></span>
-                        <span class='visually-hidden'>Previous</span>
-                    </button>
-                    <button class='carousel-control-next' type='button'
-                            data-bs-target='#chartCarousel' data-bs-slide='next'>
-                        <span class='carousel-control-next-icon' aria-hidden='true'></span>
-                        <span class='visually-hidden'>Next</span>
-                    </button>
-                </div>
             </div>
             <!-- To Do List -->
             <div class='col-sm mt-5'>

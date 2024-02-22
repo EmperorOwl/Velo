@@ -73,16 +73,17 @@ class ProjectDetail(ProjectMixin, DetailView):
         project: Project = self.object
         sprints = project.sprints.all()
         sprint = sprints.filter(status=SprintStatus.ACTIVE).first()
-        # Add to context
-        context['active_sprint'] = sprint
-        context['user_progress'] = user.task_progress(project, sprint)
-        context['user_log_time'] = user.get_log_time_display(project, sprint)
-        context['todo'] = user.remaining_tasks(project, sprint)
-        context['charts'] = [
-            get_burndown_chart(sprint),
-            get_sprint_vs_log_time_chart(sprints),
-            get_user_vs_log_time_chart(sprint)
-        ]
+        if sprint:
+            # Add to context
+            context['active_sprint'] = sprint
+            context['user_progress'] = user.task_progress(project, sprint)
+            context['user_log_time'] = user.get_log_time_display(project, sprint)
+            context['todo'] = user.remaining_tasks(project, sprint)
+            context['charts'] = [
+                get_burndown_chart(sprint),
+                get_sprint_vs_log_time_chart(sprints),
+                get_user_vs_log_time_chart(sprint)
+            ]
         return context
 
 
