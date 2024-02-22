@@ -4,8 +4,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, reverse, redirect
 from django.urls import reverse_lazy
 
-from ..models import Project
-from ..utils import pretty_form
+from ..choices import SprintStatus
+from ..models import Project, User
+from ..utils import *
 
 
 # MIXINS ----------------------------------------------------------------------
@@ -56,6 +57,7 @@ class ProjectDetail(ProjectMixin, DetailView):
 
     def get(self, request, *args, **kwargs):
         p_id = int(request.GET.get('project-id', -2))
+        self.request.session['previous_page'] = self.request.path
         if p_id == -2:
             project = Project.objects.get(id=self.kwargs['p_id'])
             request.user.set_last_visited_project(project)
@@ -64,6 +66,24 @@ class ProjectDetail(ProjectMixin, DetailView):
             return redirect('project-list')
         else:
             return redirect(reverse('project-detail', args=[p_id]))
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user: User = self.request.user
+        project: Project = self.object
+        sprints = project.sprints.all()
+        sprint = sprints.filter(status=SprintStatus.ACTIVE).first()
+        # Add to context
+        context['active_sprint'] = sprint
+        context['user_progress'] = user.task_progress(project, sprint)
+        context['user_log_time'] = user.get_log_time_display(project, sprint)
+        context['todo'] = user.remaining_tasks(project, sprint)
+        context['charts'] = [
+            get_burndown_chart(sprint),
+            get_sprint_vs_log_time_chart(sprints),
+            get_user_vs_log_time_chart(sprint)
+        ]
+        return context
 
 
 class ProjectCreate(ProjectFormMixin, CreateView):

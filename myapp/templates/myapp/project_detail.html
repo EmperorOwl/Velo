@@ -1,10 +1,115 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Dashboard{% endblock %}
 
+{% block style %}
+    <style>
+        .card:hover {
+            cursor: pointer;
+            border-width: thick;
+        }
+    </style>
+{% endblock %}
+
 {% block main %}
-    <div class='container mt-5 mb-5'>
-        <h2>Your Dashboard</h2>
-        <p>Lorem ipsum</p>
+    <div class='container my-5'>
+        <div class='row'>
+            <!-- Main -->
+            <div class='col-9'>
+                <h2 class='mb-3'>Your Dashboard</h2>
+                <p>View you and your team's current progress below.</p>
+                <p>Click on any of your tasks on the right to view or edit its details.</p>
+                {% if active_sprint %}
+                    <!-- Progress -->
+                    <h5 class='mt-4 mb-3'><strong>Current Sprint:</strong> {{ active_sprint }}</h5>
+                    <p>Sprint Dates: {{ active_sprint.get_start_date_display }}
+                        to {{ active_sprint.get_end_date_display }}</p>
+                    <p>Overall Progress: {{ active_sprint.point_progress.completed }} out
+                        of {{ active_sprint.point_progress.total }} story points achieved</p>
+                    <div class='row mb-3'>
+                        <div class='col-6'>
+                            <h6 class='mb-2'>Your Progress</h6>
+                            <ul>
+                                <li>{{ user_progress.completed }} out of {{ user_progress.total }}
+                                    assigned tasks completed
+                                </li>
+                                <li>{{ user_log_time }} logged</li>
+                            </ul>
+                            <div class='progress' style='height: 25px;'>
+                                <div class='progress-bar progress-bar-striped progress-bar-animated'
+                                     role='progressbar'
+                                     style='width: {{ user_progress.percent }}%;'
+                                     aria-valuenow='{{ user_progress.percent }}'
+                                     aria-valuemin='0' aria-valuemax='100'>
+                                    {{ user_progress.percent }}%
+                                </div>
+                            </div>
+                        </div>
+                        <div class='col-6'>
+                            <h6 class='mb-2'>Team Progress</h6>
+                            <ul>
+                                <li>{{ active_sprint.task_progress.completed }}
+                                    out of {{ active_sprint.task_progress.total }} tasks completed
+                                </li>
+                                <li>{{ active_sprint.get_log_time_display }} logged</li>
+                            </ul>
+                            <div class='progress' style='height: 25px;'>
+                                <div class='progress-bar progress-bar-striped progress-bar-animated'
+                                     role='progressbar'
+                                     style='width: {{ active_sprint.task_progress.percent }}%;'
+                                     aria-valuenow='{{ active_sprint.task_progress.percent }}'
+                                     aria-valuemin='0' aria-valuemax='100'>
+                                    {{ active_sprint.task_progress.percent }}%
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <strong>There are currently no active sprints.</strong>
+                {% endif %}
+                <!-- Graphs -->
+                <div id='chartCarousel'
+                     class='carousel carousel-dark slide'
+                     data-bs-interval='false'>
+                    <div class='carousel-inner'>
+                        {% for chart in charts %}
+                            <div class='carousel-item{% if forloop.first %} active{% endif %}'>
+                                <img class='d-block w-100 px-5'
+                                     src='data:image/png;base64,{{ chart }}'
+                                     alt='chart'>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <button class='carousel-control-prev' type='button'
+                            data-bs-target='#chartCarousel' data-bs-slide='prev'>
+                        <span class='carousel-control-prev-icon' aria-hidden='true'></span>
+                        <span class='visually-hidden'>Previous</span>
+                    </button>
+                    <button class='carousel-control-next' type='button'
+                            data-bs-target='#chartCarousel' data-bs-slide='next'>
+                        <span class='carousel-control-next-icon' aria-hidden='true'></span>
+                        <span class='visually-hidden'>Next</span>
+                    </button>
+                </div>
+            </div>
+            <!-- To Do List -->
+            <div class='col-3'>
+                <div class='container text-light text-center bg-success bg-gradient'>
+                    <h4 class='py-1'>Current Todos</h4>
+                </div>
+                {% for task in todo %}
+                    <div class='card mt-3'
+                         onclick="window.location.href='{% url 'task-update' object.id task.id %}'">
+                        <div class='card-body'>
+                            <h6 class='card-title'>{{ task.name }}</h6>
+                            <p class='card-text'>Due: {{ task.get_due_date_display }}</p>
+                        </div>
+                    </div>
+                {% empty %}
+                    <p>Great news! There are no tasks assigned to you.</p>
+                {% endfor %}
+            </div>
+        </div>
     </div>
 {% endblock %}

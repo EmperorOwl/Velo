@@ -43,7 +43,6 @@ def get_burndown_chart(sprint):
     plt.plot(dates, points, color='red', label='Actual Velocity')
     # Add legend.
     plt.legend()
-    # Finally, return the converted graph.
     return _convert_graph()
 
 
@@ -67,15 +66,15 @@ def get_sprint_vs_log_time_chart(sprints):
     plt.ylabel("Hours Worked")
     # Adjust margins
     plt.margins(y=0.2)
-    # Process graph
     return _convert_graph()
 
 
-def get_user_vs_log_time_chart(project):
-    """ Returns a bar-chart with the time spent by each user on the project.
+def get_user_vs_log_time_chart(sprint):
+    """ Returns a bar-chart with the time spent by each user on the sprint.
     """
-    names = [user.username for user in project.team]
-    log_times = [user.log_time(project) for user in project.team]
+    team = sprint.project.team.all()
+    names = [user.username for user in team]
+    log_times = [user.log_time(sprint.project, sprint) for user in team]
     # Create bar chart.
     bars = plt.bar(names, log_times, color='skyblue')
     # Add data labels.
@@ -91,5 +90,4 @@ def get_user_vs_log_time_chart(project):
     plt.ylim(bottom=0)
     # Adjust margin.
     plt.margins(y=0.2)
-    # Finally, return the converted graph.
     return _convert_graph()

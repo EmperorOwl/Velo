@@ -6,7 +6,9 @@ from ..utils import Progress, pretty_hour, pretty_date
 
 
 class User(AbstractUser):
-    """ Represents a user. """
+    """ Represents a user.
+    Each user is linked to the project they last viewed.
+    """
     last_visited_project = models.ForeignKey(
         'Project',
         on_delete=models.SET_NULL,
@@ -22,32 +24,32 @@ class User(AbstractUser):
         self.save()
 
     def tasks(self, project=None, sprint=None):
-        """ Returns tasks assigned to this user.
+        """ Returns the tasks assigned to this user.
         Can filter by project and/or sprint.
         Orders tasks by due date from oldest to newest.
         """
         tasks = self.assigned_tasks.all()
-        tasks = tasks.filter(project=project) if project else tasks
+        tasks = tasks.filter(sprint__project=project) if project else tasks
         tasks = tasks.filter(sprint=sprint) if sprint else tasks
         tasks.order_by('due_date')
         return tasks
 
     def completed_tasks(self, project=None, sprint=None):
-        """ Returns tasks assigned to this user that are complete.
+        """ Returns the tasks assigned to this user that are complete.
         Can filter by project and/or sprint.
         Orders tasks by due date from oldest to newest.
         """
         return self.tasks(project, sprint).filter(status=TaskStatus.COMPLETED)
 
     def remaining_tasks(self, project=None, sprint=None) -> list:
-        """ Returns tasks assigned to this user that are incomplete.
+        """ Returns the tasks assigned to this user that are incomplete.
         Can filter by project and/or sprint.
         Orders tasks by due date from oldest to newest.
         """
         return self.tasks(project, sprint).exclude(status=TaskStatus.COMPLETED)
 
     def task_progress(self, project=None, sprint=None) -> Progress:
-        """ Returns this user's progress.
+        """ Returns the progress on the assigned tasks of this user.
         Can filter by project and/or sprint.
         """
         return Progress(
@@ -59,7 +61,10 @@ class User(AbstractUser):
         """ Returns the total time worked by this user.
         Can filter by project and/or sprint.
         """
-        return sum(task.log_time() for task in self.tasks(project, sprint))
+        res = 0
+        for task in self.tasks(project, sprint):
+            res += task.assignee_set.filter(user=self).first().hours_worked
+        return res
 
     def get_log_time_display(self, project=None, sprint=None) -> str:
         """ Returns the string representation. """

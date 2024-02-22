@@ -2,7 +2,7 @@ from django.db import models
 from django.utils import timezone
 
 from ..choices import SprintStatus, TaskStatus
-from ..utils import Progress
+from ..utils import Progress, pretty_date, pretty_hour
 
 
 def get_default_sprint_end_date():
@@ -36,7 +36,7 @@ class Sprint(models.Model):
     )
 
     def completed_tasks(self) -> list:
-        """ Returns the completed tasks of this sprint. """
+        """ Returns the tasks in this sprint that are complete. """
         return self.tasks.filter(status=TaskStatus.COMPLETED)
 
     def point_progress(self):
@@ -57,10 +57,17 @@ class Sprint(models.Model):
         """ Returns the total number of hours worked on this sprint. """
         return sum(task.log_time() for task in self.tasks.all())
 
+    def get_start_date_display(self) -> str:
+        """ Returns the string representation. """
+        return pretty_date(self.start_date)
+
+    def get_end_date_display(self) -> str:
+        """ Returns the string representation. """
+        return pretty_date(self.end_date)
+
     def get_log_time_display(self) -> str:
         """ Returns the string representation. """
-        t = self.log_time()
-        return str(t).replace('.0', '') + ' hour' + ('s' if t != 1 else '')
+        return pretty_hour(self.log_time())
 
     def __str__(self) -> str:
         """ Returns the string representation. """
