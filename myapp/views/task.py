@@ -62,7 +62,8 @@ class TaskFormMixin(TaskMixin, FormMixin):
     def get_context_data(self, **kwargs):
         """ Adds the assignee formset to the context. """
         context = super().get_context_data(**kwargs)
-        AssigneeFormset.extra = 0 if self.object else 1
+        task = self.object
+        AssigneeFormset.extra = 0 if task and len(task.assignees.all()) > 0 else 1
         formset = AssigneeFormset(instance=self.object)
         for form in formset:
             # Dropdown should only show users in this project
