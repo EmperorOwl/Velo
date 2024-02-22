@@ -16,10 +16,10 @@
     <div class='container my-5'>
         <div class='row'>
             <!-- Main -->
-            <div class='col-9'>
+            <div class='col-sm-9'>
                 <h2 class='mb-3'>Your Dashboard</h2>
                 <p>View you and your team's current progress below.</p>
-                <p>Click on any of your tasks on the right to view or edit its details.</p>
+                <p>Click on any of your tasks in Todos to view or edit its details.</p>
                 {% if active_sprint %}
                     <!-- Progress -->
                     <h5 class='mt-4 mb-3'><strong>Current Sprint:</strong> {{ active_sprint }}</h5>
@@ -94,7 +94,7 @@
                 </div>
             </div>
             <!-- To Do List -->
-            <div class='col-3'>
+            <div class='col-sm mt-5'>
                 <div class='container text-light text-center bg-success bg-gradient'>
                     <h4 class='py-1'>Current Todos</h4>
                 </div>
