@@ -23,7 +23,7 @@ def pretty_form(form, user):
 def pretty_hour(t: float):
     """ Converts 2.1 to 2.1 hours or 1.0 to 1 hour """
     if not t:
-        return ''
+        return '0 hours'
     return str(t).replace('.0', '') + ' hour' + ('s' if t != 1 else '')
 
 
