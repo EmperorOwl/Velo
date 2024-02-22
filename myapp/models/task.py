@@ -3,6 +3,7 @@ from django.core import validators
 from django.utils import timezone
 
 from ..choices import TaskType, TaskPriority, TaskStatus
+from ..utils import pretty_date, pretty_hour
 
 
 def get_default_task_end_date():
@@ -78,10 +79,13 @@ class Task(models.Model):
         """ Returns the total time worked on this task. """
         return sum(assignee.hours_worked for assignee in self.assignee_set.all())
 
+    def get_start_date_display(self) -> str:
+        """ Returns the string representation. """
+        return pretty_date(self.start_date)
+
     def get_due_date_display(self) -> str:
         """ Returns the string representation. """
-        d = self.due_date
-        return d.strftime("%b %d" + (", %Y" if d.year != timezone.now().year else ""))
+        return pretty_date(self.due_date)
 
     def get_story_points_display(self) -> str:
         """ Returns the string representation. """
@@ -89,8 +93,7 @@ class Task(models.Model):
 
     def get_log_time_display(self) -> str:
         """ Returns the string representation. """
-        t = self.log_time()
-        return str(t).replace('.0', '') + ' hour' + ('s' if t != 1 else '')
+        return pretty_hour(self.log_time())
 
     def __str__(self) -> str:
         """ Returns the string representation. """
