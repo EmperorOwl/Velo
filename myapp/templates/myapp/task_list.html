@@ -54,7 +54,11 @@
                 {% for task in tasks %}
                     <tr style='cursor: pointer;'
                         onclick="window.location.href='{% url 'task-update' project.id task.id %}'">
-                        <td>{{ task.name }}</td>
+                        <td>{{ task.name }}
+                            {% if task.is_important %}
+                                <span class='badge bg-danger ms-1'>!</span>
+                            {% endif %}
+                        </td>
                         <td>{{ task.sprint }} </td>
                         <td>{{ task.get_priority_display }}</td>
                         <td>{{ task.get_due_date_display }}</td>
@@ -62,13 +66,6 @@
                         <td>{{ task.get_status_display }}</td>
                         <td>{{ task.get_story_points_display }}</td>
                         <td>{{ task.get_log_time_display }}</td>
-                        {% if task.is_important == True %}
-                            <td>
-                                <span class='badge bg-danger'>!</span>
-                            </td>
-                        {% else %}
-                            <td></td>
-                        {% endif %}
                     </tr>
                 {% endfor %}
                 </tbody>
